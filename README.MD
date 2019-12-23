@@ -2,8 +2,10 @@
 
 ## Usage
 First, create OAuth client json file at 
-https://console.developers.google.com/
-and save directly under clone repository.
+https://console.developers.google.com/ <br>
+and save directly under clone repository,
+as name "client_secret_test.json"
+
 
 ## Install
 npm install
