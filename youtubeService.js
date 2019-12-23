@@ -14,7 +14,7 @@ const scope = [
 ];
 
 const TOKEN_PATH = './token.json';
-const CLIENT_SECRET_PATH  ='./client_secret.json'
+const CLIENT_SECRET_PATH  ='./client_secret_test.json'
 
 let text = fs.readFileSync(CLIENT_SECRET_PATH, 'utf-8');
 credentials  =JSON.parse(text);
