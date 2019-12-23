@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Youtube chat</title>
+    <base target="_self"></base>
+
+  </head>
+  <body>
+    <h2>posting youtube chat</h2>
+    <a href="/authorize">
+        <button> 認証 </button>
+    </a>
+    <br>
+    <br>
+    <!-- <a href="/find-active-chat">
+        <button>
+         Get liveChatId
+        </button>
+    </a> -->
+        <form method="post" action="/find-active-chat">
+            <input type="text" name="videoId" placeholder="動画IDを入力" size="10">
+            <input type = "submit"/>
+        </form>
+
+    <br>
+    <br>
+        <form method="post" action="/post_message">
+            <input type="text" name="message" placeholder="チャットを入力" size="30">
+            <input type = "submit"/>
+        </form>
+  </body>
+</html>
