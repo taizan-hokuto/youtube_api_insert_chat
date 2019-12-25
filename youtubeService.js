@@ -100,6 +100,7 @@ youtubeService.getCode = response => {
   response.redirect(authUrl);
 };
 
+//callback called from youtube
 youtubeService.getTokensWithCode = async code => {
   const credentials = await auth.getToken(code);
   youtubeService.authorize(credentials);

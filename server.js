@@ -32,17 +32,6 @@ server.post('/find-active-chat', (req, res) => {
 });
 
 
-server.get('/start-tracking-chat', (req, res) => {
-  youtubeService.startTrackingChat();
- res.redirect('/');
-});
-
-
-server.get('/stop-tracking-chat', (req, res) => {
-  youtubeService.stopTrackingChat();
- res.redirect('/');
-});
-
 server.post('/post_message', (req, res) => {
   youtubeService.insertMessage(req.body.message);
   res.redirect('/');
