@@ -15,15 +15,17 @@ const scope = [
 
 const TOKEN_PATH = './token.json';
 const CLIENT_SECRET_PATH  ='./client_secret_test.json'
+const getAuth = () => {
+  const text = fs.readFileSync(CLIENT_SECRET_PATH, 'utf-8');
+  const credentials  =JSON.parse(text);
 
-let text = fs.readFileSync(CLIENT_SECRET_PATH, 'utf-8');
-credentials  =JSON.parse(text);
+  const clientSecret = credentials.web.client_secret;
+  const clientId = credentials.web.client_id;
+  const redirectUrl = credentials.web.redirect_uris[0];
+  return new OAuth2(clientId, clientSecret, redirectUrl);
+}
 
-const clientSecret = credentials.web.client_secret;
-const clientId = credentials.web.client_id;
-const redirectUrl = credentials.web.redirect_uris[0];
-const auth = new OAuth2(clientId, clientSecret, redirectUrl);
-  
+const auth = getAuth()
 
 const youtubeService = {};
 //---------------------------------------------------------------------------------------------------
@@ -69,7 +71,9 @@ youtubeService.findActiveChat = async (videoId) => {
 //*********************************
 
 youtubeService.insertMessage = (mes) => {
-  
+  if (mes == ''){
+    return
+  }
   youtube.liveChatMessages.insert(
     {
       auth,
@@ -84,8 +88,18 @@ youtubeService.insertMessage = (mes) => {
         }
       }
     },
-    (err) => {
-        if (err){ console.log(err); }
+    (err,resp) => {
+        if (err){
+          if(err.response.data.error.code == '400'){
+            console.log("エラー：空白文字を投稿しようとした、またはYoutubeアカウントのチャンネルが作成されていない可能性があります。");
+          }else{
+            console.log(`エラー:error_code=${err.response.data.error.code}, error_message = [${err.response.data.error.message}]`);
+          }
+        } else {
+          if (resp.status == '200') {
+            console.log(`チャットの投稿に成功しました：「 ${resp.data.snippet.displayMessage} 」`);
+          }
+        }
     }
   );
 }
@@ -122,7 +136,7 @@ auth.on('tokens', (tokens) => {
 });
 
 const checkTokens = async () => {
-    try{
+  try{
     const tokens = await read(TOKEN_PATH);
     if (tokens) {
       auth.setCredentials(tokens);
