@@ -16,17 +16,32 @@ const scope = [
 const TOKEN_PATH = './token.json';
 const CLIENT_SECRET_PATH  ='./client_secret_test.json'
 const getAuth = () => {
-  const text = fs.readFileSync(CLIENT_SECRET_PATH, 'utf-8');
-  const credentials  =JSON.parse(text);
+  try{
+    fs.statSync(CLIENT_SECRET_PATH);
+  }catch(error){
+    if (error.code === 'ENOENT') {
+      console.log(`${CLIENT_SECRET_PATH}が存在しません`);
+      
+    }else{
+      console.log(error);
+    }
+    return
+  }
+    const text = fs.readFileSync(CLIENT_SECRET_PATH, 'utf-8');
+    const credentials  =JSON.parse(text);
 
-  const clientSecret = credentials.web.client_secret;
-  const clientId = credentials.web.client_id;
-  const redirectUrl = credentials.web.redirect_uris[0];
-  return new OAuth2(clientId, clientSecret, redirectUrl);
+    const clientSecret = credentials.web.client_secret;
+    const clientId = credentials.web.client_id;
+    const redirectUrl = credentials.web.redirect_uris[0];
+    return new OAuth2(clientId, clientSecret, redirectUrl);
+
+
 }
 
 const auth = getAuth()
-
+if (auth == null){
+  return;
+}
 const youtubeService = {};
 //---------------------------------------------------------------------------------------------------
 
