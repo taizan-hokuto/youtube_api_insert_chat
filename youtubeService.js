@@ -29,9 +29,9 @@ const youtubeService = {};
 //---------------------------------------------------------------------------------------------------
 
 
-const save = async (path, str) => {
+const save = async (path, str, message) => {
   await writeFilePromise(path, str);
-  console.log('Successfully Saved');
+  console.log('Successfully Saved: '+ message);
 };
 
 const read = async path => {
@@ -109,25 +109,30 @@ youtubeService.getTokensWithCode = async code => {
 youtubeService.authorize = ({ tokens }) => {
   auth.setCredentials(tokens);
   console.log('Successfully set credentials');
-  save(TOKEN_PATH, JSON.stringify(tokens));
+  save(TOKEN_PATH, JSON.stringify(tokens), "credential tokens");
 };
 
 
 auth.on('tokens', (tokens) => {
   if (tokens.refresh_token) {
 
- save(TOKEN_PATH, JSON.stringify(auth.tokens));
- console.log('saved refreshed token.');
+ save(TOKEN_PATH, JSON.stringify(auth.tokens), "refreshed tokens");
+ 
   }
 });
 
 const checkTokens = async () => {
-  const tokens = await read(TOKEN_PATH);
-  if (tokens) {
-    auth.setCredentials(tokens);
-    console.log('tokens set');
-  } else {
-    console.log('no tokens set');
+    try{
+    const tokens = await read(TOKEN_PATH);
+    if (tokens) {
+      auth.setCredentials(tokens);
+      console.log('tokens set');
+    } else {
+      console.log('no tokens set');
+    }
+  }catch(e){
+    console.log("token.jsonがありません")
+    console.log("認証ボタンをクリックしてgoogleアカウントでログインし、アプリを承認してください")
   }
 };
 checkTokens();
